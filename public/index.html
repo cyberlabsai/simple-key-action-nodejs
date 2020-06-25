@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Actions Historic</title>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+<h2>Actions Historic</h2>
+<p id="demo"></p>
+
+<button type="button" onclick="updateTable()">Update Table</button>
+<table id = "myTable">
+  <tr>
+    <th>Last Update</th>
+    <th>Portal Name</th>
+    <th>Method</th>
+    <th>User Name</th>
+  </tr>
+</table>
+
+<script>
+const updateTable = () => {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let data = JSON.parse(this.responseText).data
+      document.getElementById("demo").innerHTML = new Date
+      var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0]
+      tableRef.innerHTML = `
+      <table id = "myTable">
+        <tr>
+          <th>Last Update</th>
+          <th>Portal Name</th>
+          <th>Method</th>
+          <th>User Name</th>
+        </tr>
+      </table>`
+      data.forEach((elm, index) => {
+        var newRow   = tableRef.insertRow(1)
+        var cell0 = newRow.insertCell(0)
+        var cell1  = newRow.insertCell(1)
+        var cell2  = newRow.insertCell(2)
+        var cell3  = newRow.insertCell(3)
+        cell0.innerHTML = elm.dateTime
+        cell1.innerHTML = elm.portal
+        cell2.innerHTML = elm.method
+        cell3.innerHTML = elm.name
+      })
+    }
+  };
+    xhttp.open("GET", "http://localhost:8281/list", true)
+    xhttp.send()
+}
+setInterval(() => updateTable(), 10000);
+</script>
+</body>
+</html>
